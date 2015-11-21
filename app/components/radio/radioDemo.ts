@@ -4,8 +4,11 @@ import {Component, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
 @Component({
   template: `
     <h1>Radio Group</h1>
+    <p class="note">
+    TODO: two way data binding (No value accessor for '' in [null] when using ng-model)
+    </p>
 
-    <radio-group [(value)]="rgVal" (value-changed)="rgVal=$event" [name]="'group1'">
+    <radio-group [value]="rgVal" (change)="rgVal=$event.target.value" [name]="'group1'">
       <radio>
         <input type="radio" value="1"/>
         <span>radio 1</span>
@@ -20,7 +23,6 @@ import {Component, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
     radio group value {{rgVal}}
     </p>
     <p class="note">
-    TODO: two way data binding (No value accessor for '' in [null] when using ng-model)
     <input type="text" [(ng-model)]="rgVal">
     </p>
   `,
