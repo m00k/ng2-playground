@@ -1,25 +1,32 @@
 import {ElementRef, ContentChild, Input} from 'angular2/angular2';
 import {ContentChildren, QueryList, Component, Directive} from 'angular2/angular2';
-//import {EventEmitter} from 'angular2/src/facade/async';
 import {DomRenderer} from 'angular2/src/core/render/dom/dom_renderer';
+//import {EventEmitter} from 'angular2/src/facade/async';
+
+var log = function(msg, ...msgs) {
+  msgs.unshift(msg);
+  console.log.apply(console, msgs);
+};
 
 @Directive({
   selector: 'input[type=radio]',
   host: {
     '[checked]': 'checked', // TODO: how does this exactly work - vs @Input()?
-    '(change)': 'log("changed", $event)'
+    '(change)': 'log("changed event", $event)'
   }
 })
 export class RadioInputCmp {
   @Input() checked: boolean=false;
   @Input() value: string;
+  log;
+
   private elRef: ElementRef;
   private domRenderer: DomRenderer;
 
   setName(name) {
-    console.log('[radio input] set name');
+    this.log('set name');
     this.domRenderer.setElementAttribute(this.elRef, 'name', name);
-    console.log(this.elRef.nativeElement);
+    this.log(this.elRef.nativeElement);
   }
 
   update(groupValue: string) {
@@ -28,15 +35,11 @@ export class RadioInputCmp {
     /* tslint:enable */
   }
 
-  log(event) {
-    console.log('[radio input] changed event', event);
-  }
-
   constructor(elRef: ElementRef, domRenderer: DomRenderer) {
-    console.log('[radio input] ctor');
+    this.log = log.bind(log, '[radio input]');
+    this.log('ctor', elRef.nativeElement);
     this.elRef = elRef;
     this.domRenderer = domRenderer;
-    console.log(this.elRef.nativeElement);
   }
 }
 
@@ -52,6 +55,8 @@ export class RadioInputCmp {
 export class RadioCmp {
   @ContentChild(RadioInputCmp) radioInput: RadioInputCmp;
 
+  log;
+
   setName(name) {
     this.radioInput.setName(name);
   }
@@ -61,7 +66,8 @@ export class RadioCmp {
   }
 
   constructor() {
-    console.log('[radio] ctor');
+    this.log = log.bind(log, '[radio]');
+    this.log('ctor');
   }
 }
 
@@ -75,6 +81,8 @@ export class RadioCmp {
 export class RadioGroupCmp {
   @Input() name: string;
   @ContentChildren(RadioCmp) radioQuery: QueryList<RadioCmp>;
+  log;
+
   private value_: string;
 
   get value() {
@@ -82,10 +90,10 @@ export class RadioGroupCmp {
   }
 
   set value(value: string) {
-    console.log('[radio group] trying to set value', value);
+    this.log('trying to set value', value);
     this.value_ = value;
     if (this.radioQuery) {
-      console.log('[radio group] set value', value, this.radioQuery.toArray());
+      this.log('set value', value, this.radioQuery.toArray());
       this.radioQuery.toArray().forEach(
         rq => rq.update(this.value)
       );
@@ -93,7 +101,7 @@ export class RadioGroupCmp {
   }
 
   afterContentInit() {
-    console.log('[radio group] after content init');
+    this.log('after content init');
     this.radioQuery.toArray().forEach(
       rq => {
         rq.setName(this.name);
@@ -102,11 +110,8 @@ export class RadioGroupCmp {
     );
   }
 
-  log(event) {
-    console.log('[radio-group] changed event', event);
-  }
-
   constructor() {
-    console.log('[radio group] ctor');
+    this.log = log.bind(log, '[radio group]');
+    this.log('ctor');
   }
 }
