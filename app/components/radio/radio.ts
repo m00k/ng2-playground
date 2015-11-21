@@ -1,7 +1,7 @@
-import {ElementRef, ContentChild, Input, Output, CORE_DIRECTIVES, FORM_DIRECTIVES, AfterContentInit, ContentChildren, QueryList, Component, Directive} from 'angular2/angular2';
+import {CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
+import {ElementRef, ContentChild, Input, Output} from 'angular2/angular2';
+import {ContentChildren, QueryList, Component, Directive} from 'angular2/angular2';
 import {EventEmitter} from 'angular2/src/facade/async';
-import {EventDispatcher} from "../../../node_modules/angular2/src/web_workers/ui/event_dispatcher";
-import {EventEmitter} from "../../../node_modules/angular2/ts/src/facade/async";
 
 @Directive({
   selector: 'input[type=radio]',
@@ -13,12 +13,13 @@ import {EventEmitter} from "../../../node_modules/angular2/ts/src/facade/async";
 export class RadioInputCmp {
   @Input() checked: boolean=false;
   //@Input() name: string;
-  @Input() value: any;
-  @Output() checkedChanged: EventEmitter = new EventEmitter();
+  @Input() value: string;
+  @Output() checkedChanged: EventEmitter<any> = new EventEmitter();
   elRef: ElementRef;
 
   onChange(event) {
     console.log('[radio input] change event');
+    //noinspection TypeScriptUnresolvedFunction
     this.checkedChanged.next(this);
   }
 
@@ -44,21 +45,24 @@ export class RadioInputCmp {
 })
 export class RadioCmp {
   @ContentChild(RadioInputCmp) radioInput: RadioInputCmp;
-  @Output() checkedChanged: EventEmitter = new EventEmitter();
+  @Output() checkedChanged: EventEmitter<any> = new EventEmitter();
 
   setName(name) {
     this.radioInput.setName(name);
   }
 
   afterContentInit() {
+    //noinspection TypeScriptUnresolvedFunction
     this.radioInput.checkedChanged.subscribe({
-     next: event => {this.checkedChanged.next(event)}
-    })
+     next: event => this.checkedChanged.next(event)
+    });
   }
 
-  update(groupValue: any) {
+  update(groupValue: string) {
     if (this.radioInput) {
+      /* tslint:disable */
       if (this.radioInput.value == groupValue) {
+        /* tslint:enable */
         this.radioInput.checked = true;
       }
     }
@@ -66,13 +70,12 @@ export class RadioCmp {
 }
 
 @Directive({
-  selector: 'radio-group',
-  directives: [FORM_DIRECTIVES, CORE_DIRECTIVES, RadioCmp, RadioInputCmp] // TODO: is this necessary?
+  selector: 'radio-group'
 })
 export class RadioGroupCmp {
-  @Input() value: any;
+  @Input() value: string;
   @Input() name: string;
-  @Output() valueChanged: EventEmitter = new EventEmitter;
+  @Output() valueChanged: EventEmitter<any>= new EventEmitter;
   @ContentChildren(RadioCmp) radioQuery: QueryList<RadioCmp>;
 
   afterContentInit() {
@@ -83,8 +86,10 @@ export class RadioGroupCmp {
         rq.checkedChanged.subscribe({
           next: event => {
             this.value = event.value;
+            //noinspection TypeScriptUnresolvedFunction
             this.valueChanged.next(event.value);
-            console.log('[radio group checked]', event)}
+            console.log('[radio group checked]', event);
+          }
         });
       }
     );
