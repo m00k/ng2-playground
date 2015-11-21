@@ -2,6 +2,7 @@ import {CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
 import {ElementRef, ContentChild, Input, Output} from 'angular2/angular2';
 import {ContentChildren, QueryList, Component, Directive} from 'angular2/angular2';
 import {EventEmitter} from 'angular2/src/facade/async';
+import {DomRenderer} from 'angular2/src/core/render/dom/dom_renderer';
 
 @Directive({
   selector: 'input[type=radio]',
@@ -16,6 +17,7 @@ export class RadioInputCmp {
   @Input() value: string;
   @Output() checkedChanged: EventEmitter<any> = new EventEmitter();
   elRef: ElementRef;
+  domRenderer: DomRenderer;
 
   onChange(event) {
     console.log('[radio input] change event');
@@ -24,13 +26,14 @@ export class RadioInputCmp {
   }
 
   setName(name) {
-    this.elRef.nativeElement.setAttribute('name', name);
+    this.domRenderer.setElementAttribute(this.elRef, 'name', name);
     console.log(this.elRef.nativeElement);
   }
 
-  constructor(elRef: ElementRef) {
+  constructor(elRef: ElementRef, domRenderer: DomRenderer) {
     console.log('[radio input]');
     this.elRef = elRef;
+    this.domRenderer = domRenderer;
   }
 }
 
