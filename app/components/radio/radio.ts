@@ -1,4 +1,3 @@
-import {CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
 import {ElementRef, ContentChild, Input, Output} from 'angular2/angular2';
 import {ContentChildren, QueryList, Component, Directive} from 'angular2/angular2';
 import {EventEmitter} from 'angular2/src/facade/async';
@@ -13,11 +12,10 @@ import {DomRenderer} from 'angular2/src/core/render/dom/dom_renderer';
 })
 export class RadioInputCmp {
   @Input() checked: boolean=false;
-  //@Input() name: string;
   @Input() value: string;
   @Output() checkedChanged: EventEmitter<any> = new EventEmitter();
-  elRef: ElementRef;
-  domRenderer: DomRenderer;
+  private elRef: ElementRef;
+  private domRenderer: DomRenderer;
 
   onChange(event) {
     console.log('[radio input] change event');
@@ -26,14 +24,16 @@ export class RadioInputCmp {
   }
 
   setName(name) {
+    console.log('[radio input] set name');
     this.domRenderer.setElementAttribute(this.elRef, 'name', name);
     console.log(this.elRef.nativeElement);
   }
 
   constructor(elRef: ElementRef, domRenderer: DomRenderer) {
-    console.log('[radio input]');
+    console.log('[radio input] ctor');
     this.elRef = elRef;
     this.domRenderer = domRenderer;
+    console.log(this.elRef.nativeElement);
   }
 }
 
@@ -70,6 +70,10 @@ export class RadioCmp {
       }
     }
   }
+
+  constructor() {
+    console.log('[radio] ctor');
+  }
 }
 
 @Directive({
@@ -91,44 +95,14 @@ export class RadioGroupCmp {
             this.value = event.value;
             //noinspection TypeScriptUnresolvedFunction
             this.valueChanged.next(event.value);
-            console.log('[radio group checked]', event);
+            console.log('[radio group] checked event', event);
           }
         });
       }
     );
   }
-}
-
-// TODO: set name on radio inputs from radio group
-@Component({
-  template: `
-    <h1>Radio Group</h1>
-
-    <radio-group [(value)]="rgVal" (value-changed)="rgVal=$event" [name]="'group1'">
-      <radio>
-        <input type="radio" value="1"/>
-        <span>radio 1</span>
-      </radio>
-      <radio>
-        <input type="radio" value="2"/>
-        <span>radio 2</span>
-      </radio>
-    </radio-group>
-
-    <p class="note">
-    radio group value {{rgVal}}
-    </p>
-    <p class="note">
-    TODO: two way data binding (No value accessor for '' in [null] when using ng-model)
-    <input type="text" [(ng-model)]="rgVal">
-    </p>
-  `,
-  directives: [FORM_DIRECTIVES, CORE_DIRECTIVES, RadioGroupCmp, RadioInputCmp, RadioCmp]
-})
-export class RadioDemoCmp {
-  rgVal: number=2;
 
   constructor() {
-    console.log('[radio demo]');
+    console.log('[radio group] ctor');
   }
 }

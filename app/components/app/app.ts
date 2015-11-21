@@ -7,7 +7,7 @@ import {
 
 import {HomeCmp} from '../home/home';
 import {AboutCmp} from '../about/about';
-import {RadioDemoCmp} from '../radio/radio';
+import {RadioDemoCmp} from '../radio/radioDemo';
 import {NameList} from '../../services/name_list';
 
 @Component({
