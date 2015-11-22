@@ -1,4 +1,4 @@
-import {Radio2Cmp, Radio2InputCmp} from './radio2';
+import {Radio2Cmp} from './radio2';
 import {Radio2GroupCmp} from './radio2Group';
 import {Component, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
 
@@ -29,7 +29,7 @@ import {Component, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
       </p>
     </div>
   `,
-  directives: [FORM_DIRECTIVES, CORE_DIRECTIVES, Radio2GroupCmp, Radio2InputCmp, Radio2Cmp]
+  directives: [FORM_DIRECTIVES, CORE_DIRECTIVES, Radio2GroupCmp, Radio2Cmp]
 })
 export class Radio2DemoCmp {
   rgVal: number=2;

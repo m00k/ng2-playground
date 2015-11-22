@@ -1,8 +1,5 @@
-import {Component, Input, Output} from 'angular2/angular2';
-import {ContentChildren, QueryList, Directive} from 'angular2/angular2';
-//import {DomRenderer} from 'angular2/src/core/render/dom/dom_renderer';
+import {Directive, Input, Output} from 'angular2/angular2';
 import {EventEmitter} from 'angular2/src/facade/async';
-import {Radio2Cmp} from './radio2';
 
 var log = function(msg, ...msgs) {
   msgs.unshift(msg);
@@ -11,14 +8,11 @@ var log = function(msg, ...msgs) {
 
 @Directive({
   selector: 'radio-group',
-  inputs: ['value'],
-  host: {
-    '(change)': 'log($event)'
-  }
+  inputs: ['value']
 })
 export class Radio2GroupCmp {
   @Input() name: string;
-  @ContentChildren(Radio2Cmp) radioQuery: QueryList<Radio2Cmp>;
+  @Output() valueChanged: EventEmitter<any> = new EventEmitter();
   log;
 
   private value_: string;
@@ -27,20 +21,13 @@ export class Radio2GroupCmp {
     return this.value_;
   }
 
+  // NOTE: using the setter to trigger the event
+  // that eventually passes the value change on to the children
   set value(value: string) {
-    this.log('set value', value, this.radioQuery);
+    this.log('set value', value);
     this.value_ = value;
-    if (this.radioQuery) {
-      this.log('set value', value);
-      this.radioQuery.toArray().forEach(
-        rq => rq.updateChecked()
-      );
-    }
-  }
-
-  afterContentInit() {
-    this.log('after view init', this.radioQuery);
     //noinspection TypeScriptUnresolvedFunction
+    this.valueChanged.next(this.value);
   }
 
   constructor() {
