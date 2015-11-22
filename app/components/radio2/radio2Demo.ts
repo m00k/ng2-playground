@@ -12,10 +12,10 @@ import {Component, CORE_DIRECTIVES, FORM_DIRECTIVES} from 'angular2/angular2';
 
       <div class="well">
         <radio-group [value]="rgVal" (change)="rgVal=$event.target.value" [name]="'group1'">
-          <radio value="1"/>
+          <radio [value]="'1'"/>
             radio 1
           </radio>
-          <radio value="2"/>
+          <radio [value]="'2'"/>
             radio 2
           </radio>
         </radio-group>
