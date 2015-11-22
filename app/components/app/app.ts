@@ -9,6 +9,7 @@ import {HomeCmp} from '../home/home';
 import {AboutCmp} from '../about/about';
 import {RadioDemoCmp} from '../radio/radioDemo';
 import {Radio2DemoCmp} from '../radio2/radio2Demo';
+import {Radio3DemoCmp} from '../radio3/radio3Demo';
 import {NameList} from '../../services/name_list';
 
 @Component({
@@ -23,6 +24,7 @@ import {NameList} from '../../services/name_list';
   { path: '/', component: HomeCmp, as: 'Home' },
   { path: '/about', component: AboutCmp, as: 'About' },
   { path: '/radio', component: RadioDemoCmp, as: 'RadioDemo' },
-  { path: '/radio2', component: Radio2DemoCmp, as: 'Radio2Demo' }
+  { path: '/radio2', component: Radio2DemoCmp, as: 'Radio2Demo' },
+  { path: '/radio3', component: Radio3DemoCmp, as: 'Radio3Demo' }
 ])
 export class AppCmp {}
