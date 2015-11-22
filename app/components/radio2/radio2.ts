@@ -40,6 +40,8 @@ export class Radio2Cmp {
 
   // TODO: if you make Radio2GroupCmp a Component instead of a directive
   // @Host() statement will blow up with 'unexpected directive value of undefined in view'?
+  // NOTE: also works instead of @Host()
+  // constructor(host: Radio2GroupCmp) {
   constructor(@Host() host: Radio2GroupCmp) {
     this.log = log.bind(log, '[radio]');
     this.log('ctor');

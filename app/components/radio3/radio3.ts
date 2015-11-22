@@ -1,6 +1,6 @@
 import {Component, Input} from 'angular2/angular2';
 import {FORM_DIRECTIVES, CORE_DIRECTIVES} from 'angular2/angular2';
-import {Radio3GroupCmp} from './radio3Group';
+//import {Radio3GroupCmp} from './radio3Group';
 //import {DomRenderer} from 'angular2/src/core/render/dom/dom_renderer';
 
 var log = function(msg, ...msgs) {
@@ -12,7 +12,7 @@ var log = function(msg, ...msgs) {
   selector: 'radio',
   template: `
     <label>
-      <input type="radio" [value]="value" [name]="radioGroup.name" [checked]="checked"/>
+      <input type="radio" [value]="value" [name]="name" [checked]="checked"/>
       <span>
         <ng-content></ng-content>
       </span>
@@ -23,27 +23,26 @@ var log = function(msg, ...msgs) {
 export class Radio3Cmp {
   @Input() value: string;
   checked: boolean;
-  radioGroup: Radio3GroupCmp;
+  name: string;
   log;
 
-  private updateSubscription = {
-    next: event => {
-      this.update();
-    }
-  };
-
-  update() {
-    /* tslint:disable */
-    this.checked = (this.radioGroup.value == this.value);
-    /* tslint:enable */
-    this.log('update', this.value, this.radioGroup.value, this.checked);
+  setName(name) {
+    this.name = name;
   }
 
-  constructor(radioGroup: Radio3GroupCmp) {
+  update(groupValue: string) {
+    /* tslint:disable */
+    this.checked = (groupValue == this.value);
+    /* tslint:enable */
+    this.log('update', this.value, groupValue, this.checked);
+  }
+
+  constructor() {
     this.log = log.bind(log, '[radio]');
     this.log('ctor');
-    this.log('radioGroup', radioGroup);
-    this.radioGroup = radioGroup;
-    this.radioGroup.valueChanged.subscribe(this.updateSubscription);
   }
+
+  // TODO: so as soon as i reference the radio group in the ctor
+  // radio3Group's contentChildren will stay empty???
+  //constructor(radioGroup: Radio3GroupCmp) {
 }

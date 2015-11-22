@@ -1,5 +1,4 @@
-import {ContentChildren, QueryList, Component, Input, Output} from 'angular2/angular2';
-import {FORM_DIRECTIVES, CORE_DIRECTIVES} from 'angular2/angular2';
+import {ContentChildren, QueryList, Directive, Input, Output} from 'angular2/angular2';
 import {EventEmitter} from 'angular2/src/facade/async';
 import {Radio3Cmp} from './radio3';
 
@@ -8,13 +7,9 @@ var log = function(msg, ...msgs) {
   console.log.apply(console, msgs);
 };
 
-@Component({
+@Directive({
   selector: 'radio-group',
-  inputs: ['value'],
-  template: `
-    <ng-content></ng-content>
-  `,
-  directives: [FORM_DIRECTIVES, CORE_DIRECTIVES] // NOTE: do not add Radio3Cmp to list of directives
+  inputs: ['value']
 })
 export class Radio3GroupCmp {
   @Input() name: string;
@@ -33,12 +28,24 @@ export class Radio3GroupCmp {
   set value(value: string) {
     this.log('set value', value);
     this.value_ = value;
-    //noinspection TypeScriptUnresolvedFunction
-    this.valueChanged.next(this.value);
+    if (this.radioQuery) {
+      this.log('set value', value);
+      this.radioQuery.toArray().forEach(
+        radio => {
+          radio.update(this.value);
+        }
+      );
+    }
   }
 
   afterContentInit() {
     this.log('after content init', this.radioQuery);
+    this.radioQuery.toArray().forEach(
+      radio => {
+        radio.setName(this.name);
+        radio.update(this.value);
+      }
+    );
   }
 
   constructor() {
